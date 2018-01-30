@@ -15,8 +15,8 @@ Route::get('/', function () {
     return view('phonebook');
 });
 
-Route::get('/phone/{name}', function () {
+Route::resource('phone', 'PhoneController');
+
+Route::get('/{name}', function () {
     return redirect('/');
 })->where('name', '[A-Za-z]+');
-
-Route::resource('phone', 'PhoneController');

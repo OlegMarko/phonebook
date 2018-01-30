@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Http\Request;
 
 class PhoneRequest extends FormRequest
 {
@@ -25,8 +26,8 @@ class PhoneRequest extends FormRequest
     {
         return [
             'name' => 'required|max:191',
-            'number' => 'required|max:10|numeric',
-            'email' => 'required|email|max:191|unique:phones'
+            'number' => 'required|max:10',
+            'email' => 'required|email|max:191|unique:phones,email,' . $this->request->get('id', 'null')
         ];
     }
 }

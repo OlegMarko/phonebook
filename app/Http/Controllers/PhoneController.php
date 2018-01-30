@@ -15,7 +15,9 @@ class PhoneController extends Controller
      */
     public function index()
     {
-        return view('phonebook');
+        $phones = Phone::orderBy('name', 'ASC')->get()->toArray();
+
+        return response()->json($phones, 200);
     }
 
     /**
@@ -69,13 +71,18 @@ class PhoneController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Phone  $phone
-     * @return \Illuminate\Http\Response
+     * @param PhoneRequest $request
+     * @param Phone $phone
+     *
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function update(Request $request, Phone $phone)
+    public function update(PhoneRequest $request, Phone $phone)
     {
-        //
+        $request_data = $request->only(['name', 'number', 'email']);
+
+        $phone = Phone::find($phone)->first()->update($request_data);
+
+        return response()->json($phone, 200);
     }
 
     /**
@@ -86,6 +93,8 @@ class PhoneController extends Controller
      */
     public function destroy(Phone $phone)
     {
-        //
+        $phone = Phone::find($phone)->first()->delete();
+
+        return response()->json($phone, 200);
     }
 }

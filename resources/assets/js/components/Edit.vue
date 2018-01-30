@@ -1,9 +1,9 @@
 <template>
-    <div class="modal" :class="openModal">
+    <div class="modal" :class="editActive">
         <div class="modal-background"></div>
         <div class="modal-card">
             <header class="modal-card-head">
-                <p class="modal-card-title">Add New Phone</p>
+                <p class="modal-card-title">Update {{ phone.name }}'s Details</p>
                 <button class="delete" aria-label="close" @click="closeModal"></button>
             </header>
             <section class="modal-card-body">
@@ -32,7 +32,7 @@
                 </div>
             </section>
             <footer class="modal-card-foot">
-                <button class="button is-success" @click="savePhone">Save phone</button>
+                <button class="button is-success" @click="editPhone">Edit phone</button>
                 <button class="button" @click="closeModal">Cancel</button>
             </footer>
         </div>
@@ -41,14 +41,9 @@
 
 <script>
     export default {
-        props: ['openModal'],
+        props: ['editActive', 'phone'],
         data () {
             return {
-                phone: {
-                    name: '',
-                    number: '',
-                    email: ''
-                },
                 errors: {},
             }
         },
@@ -56,19 +51,10 @@
             closeModal () {
                 this.$emit('closeModal');
             },
-            savePhone () {
-                axios.post('/phone', this.phone)
+            editPhone () {
+                axios.put('/phone/' + this.$props.phone.id, this.phone)
                     .then((response) => {
                         this.closeModal();
-                        this.$parent.phones.push(response.data);
-                        this.$parent.phones.sort((a, b) => {
-                            if (a.name > b.name) {
-                                return 1;
-                            } else if (a.name < b.name) {
-                                return -1;
-                            }
-                        });
-                        this.phone = {};
                     })
                     .catch((error) => this.errors = error.response.data.errors);
             }
